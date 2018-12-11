@@ -8,12 +8,12 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache.lazy = TRUE, cache = TRUE)
 ```
-##Spis treÅ“ci
+##Spis treœci
 1. [Streszczenie](#streszczenie)
 2. [Statystyki](#statystyki)
 3. [Korelacja](#korelacja)
 4. [Top 50 klas](#top-50-klas)
-5. [Wykresy rozkÂ³adow liczby atomow i elektronow](#wykresy-rozkladow-liczby-atomow-i-elektronow)
+5. [Wykresy rozk³adow liczby atomow i elektronow](#wykresy-rozkladow-liczby-atomow-i-elektronow)
 6. [Niezgodnosc liczby atomow i elektronow](#niezgodnosc-liczby-atomow-i-elektronow)
 7. [Rozklad kolumn part_01](#rozklad-kolumn-part_01)
 8. [Regresja](#regresja)
@@ -22,17 +22,17 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache.lazy = TRUE, cache = 
 
 ## Streszczenie
 
-Raport dotyczy analizy danych krystalograficznych pochodzÂ¹cych z bazy Protein Data Bank (PDB). 
+Raport dotyczy analizy danych krystalograficznych pochodz¹cych z bazy Protein Data Bank (PDB). 
 
-DuÂ¿a liczba atrybutÃ³w w zbiorze mogÂ³a spowodowaÃ¦ nieczytelnoÅ“Ã¦ korelacji, dlatego naleÂ¿aÂ³o zawÃªziÃ¦ zbiÃ³r do wybranych kolumn.
+Du¿a liczba atrybutów w zbiorze mog³a spowodowaæ nieczytelnoœæ korelacji, dlatego nale¿a³o zawêziæ zbiór do wybranych kolumn.
 
-Bardzo waÂ¿ny okazaÂ³ siÃª wybÃ³r atrybutÃ³w wykorzystywanych w regresji i klasyfikacji - zaleÂ¿aÂ³a od niego poprawnoÅ“Ã¦ predykcji.
+Bardzo wa¿ny okaza³ siê wybór atrybutów wykorzystywanych w regresji i klasyfikacji - zale¿a³a od niego poprawnoœæ predykcji.
 
-JednÂ¹ z obserwacji jest fakt, Â¿e pozycje w rankingu klas z najwiÃªkszÂ¹ niezgodnoÅ“ciÂ¹ liczby atomÃ³w sÂ¹ podobne do pozycji w rankingu klas z najwiÃªkszÂ¹ niezgodnoÅ“ciÂ¹ liczby elektronÃ³w.
+Jedn¹ z obserwacji jest fakt, ¿e pozycje w rankingu klas z najwiêksz¹ niezgodnoœci¹ liczby atomów s¹ podobne do pozycji w rankingu klas z najwiêksz¹ niezgodnoœci¹ liczby elektronów.
 
-MoÂ¿na zauwaÂ¿yÃ¦, Â¿e wykorzystanie uczenia maszynowego moÂ¿e pomÃ³c biologom w stwierdzeniu jakie czÂ¹steczki mogÂ¹ siÃª kryÃ¦ w niewymodelowanych fragmentach map intensywnoÅ“ci.
+Mo¿na zauwa¿yæ, ¿e wykorzystanie uczenia maszynowego mo¿e pomóc biologom w stwierdzeniu jakie cz¹steczki mog¹ siê kryæ w niewymodelowanych fragmentach map intensywnoœci.
 
-PodstawowÂ¹ trudnoÅ“ciÂ¹ podczas wykonywania projektu byÂ³a nieznajomoÅ“Ã¦ dziedziny, ktÃ³rej dotyczyÂ³y dane. Osoba posiadajÂ¹ca odpowiedniÂ¹ wiedzÃª biologicznÂ¹ z pewnoÅ“ciÂ¹ wyciÂ¹gnÃªÂ³aby z analizy wiÃªcej wnioskÃ³w i zauwaÂ¿yÂ³a dodatkowe zaleÂ¿nosci.
+Podstawow¹ trudnoœci¹ podczas wykonywania projektu by³a nieznajomoœæ dziedziny, której dotyczy³y dane. Osoba posiadaj¹ca odpowiedni¹ wiedzê biologiczn¹ z pewnoœci¹ wyci¹gnê³aby z analizy wiêcej wniosków i zauwa¿y³a dodatkowe zale¿nosci.
 
 ```{r libraries, message=FALSE}
 library(dplyr)
@@ -44,7 +44,7 @@ library(DT)
 library(corrplot)
 library(reshape2)
 library(caret)
-library(randomForest) 
+library(randomForest)
 
 prettyTable <- function(table_df, round_columns=numeric(), round_digits=2) {
 DT::datatable(table_df, style="bootstrap", rownames = TRUE, options=list(dom='tp')) %>%formatRound(round_columns, round_digits)}
@@ -73,7 +73,7 @@ prot_data2 <- prot_data2[!sapply(prot_data2, function(x)all(is.na(x)))]
 ```
 
 ##Statystyki
-Analizowany zbÃ³r danych zawiera `r nrow(prot_data2)` wierszy i `r ncol(prot_data2)` kolumn. PoniÂ¿ej zamieszczono najwaÂ¿niejsze statystyki. Statystyki dotyczÂ¹ tylko danych typu numeric lub integer.
+Analizowany zbór danych zawiera `r nrow(prot_data2)` wierszy i `r ncol(prot_data2)` kolumn. Poni¿ej zamieszczono najwa¿niejsze statystyki. Statystyki dotycz¹ tylko danych typu numeric lub integer.
 ```{r stats}
 my_summary <- data.frame(summary(prot_data2))
 my_summary <- filter(my_summary, !is.na(Freq))
@@ -92,7 +92,7 @@ prot_data3 <- filter(prot_data2, res_name %in% c(p$res_name))
 ```
 
 ##Korelacja
-Analizowany zbiÃ³r danych posiada duÂ¿Â¹ liczbÃª atrybutÃ³w. Korelacja miÃªdzy wszystkimi atrybutami byÂ³aby nieczytelna graficznie i trudna do analizy. Dlatego korelacja zostaÂ³a przedstawiona tylko dla kolumn rozpoczynajÂ¹cych siÃª od "part_0". Kolumny te reprezentujÂ¹ atrybuty rÃ³Â¿nych poziomÃ³w odciÃªcia intensywnoÅ“ci. 
+Analizowany zbiór danych posiada du¿¹ liczbê atrybutów. Korelacja miêdzy wszystkimi atrybutami by³aby nieczytelna graficznie i trudna do analizy. Dlatego korelacja zosta³a przedstawiona tylko dla kolumn rozpoczynaj¹cych siê od "part_0". Kolumny te reprezentuj¹ atrybuty ró¿nych poziomów odciêcia intensywnoœci. 
 ```{r Korelacja}
 part_col<-prot_data3 %>% select(starts_with("part_0"))
 part_col<-part_col[complete.cases(part_col),]
@@ -114,41 +114,41 @@ ggplotly(cor_plot)
 ```
 
 ##Top 50 klas
-PoniÂ¿sza tabela przedstawia 50 najczÃªÅ“ciej wystÃªpujÂ¹cych nazw ligandu (res_name) w zbiorze danych.
+Poni¿sza tabela przedstawia 50 najczêœciej wystêpuj¹cych nazw ligandu (res_name) w zbiorze danych.
 ```{r Top50}
 prettyTable(p)
 ```
 
 ##Wykresy rozkladow liczby atomow i elektronow
-###a) rozkÂ³ad liczby atomÃ³w
-```{r rozkÂ³ad_atomow}
+###a) rozk³ad liczby atomów
+```{r rozk³ad_atomow}
 histogram1 <- ggplot(prot_data3, aes(x=local_res_atom_non_h_count)) + geom_histogram(binwidth=1, fill="white", colour="black")
 histogram1
 ```
 
-###b) rozkÂ³ad liczby elektronÃ³w
-```{r rozkÂ³ad_elektronow}
+###b) rozk³ad liczby elektronów
+```{r rozk³ad_elektronow}
 histogram2 <- ggplot(prot_data3, aes(x=local_res_atom_non_h_electron_sum)) + geom_histogram(binwidth=6, fill="white", colour="black")
 histogram2
 ```
 
 ##Niezgodnosc liczby atomow i elektronow
-Dla danych pogrupowanych po atrybucie res_name obliczono Å“redniÂ¹ niezgodnoÅ“Ã¦ liczby atomÃ³w i elektronÃ³w. Klasy z najwiÃªkszÂ¹ niezgodnoÅ“ciÂ¹ przedstawiono w tabeli poniÂ¿ej.
+Dla danych pogrupowanych po atrybucie res_name obliczono œredni¹ niezgodnoœæ liczby atomów i elektronów. Klasy z najwiêksz¹ niezgodnoœci¹ przedstawiono w tabeli poni¿ej.
 
-###a) klasy z najwiÃªkszÂ¹ nizgodnoÅ“ciÂ¹ liczby atomÃ³w
+###a) klasy z najwiêksz¹ nizgodnoœci¹ liczby atomów
 ```{r diff_a}
 atom <- prot_data3 %>% mutate(diff=abs(local_res_atom_non_h_count - dict_atom_non_h_count)) %>% group_by(res_name) %>% summarize(group_diff=mean(diff)) %>% arrange(desc(group_diff)) %>% head(10)
 prettyTableWithoutPagination (atom)
 ```
 
-###b) klasy z najwiekszÂ¹ niezgodnoÅ“cia liczby elektronÃ³w
+###b) klasy z najwieksz¹ niezgodnoœcia liczby elektronów
 ```{r diff_e}
 electron <- prot_data3 %>% mutate(diff=abs(local_res_atom_non_h_electron_sum - dict_atom_non_h_electron_sum)) %>% group_by(res_name) %>% summarize(group_diff=mean(diff)) %>% arrange(desc(group_diff)) %>% head(10)
 prettyTableWithoutPagination (electron)
 ```
 
 ##Rozklad kolumn part_01
-PoniÂ¿sze wykresy przedstawiajÂ¹ rozkÂ³ad wartoÅ“ci kolumn o nazwach zaczynajÂ¹cych siÃª od "part_01". Na wykresach zaznaczono Å“redniÂ¹ wartoÅ“Ã¦.
+Poni¿sze wykresy przedstawiaj¹ rozk³ad wartoœci kolumn o nazwach zaczynaj¹cych siê od "part_01". Na wykresach zaznaczono œredni¹ wartoœæ.
 ```{r part_01}
 part_01_col<-prot_data3 %>% select(starts_with("part_01"))
 for(i in 1:ncol(part_01_col)){
@@ -162,7 +162,7 @@ for(i in 1:ncol(part_01_col)){
 ```
 
 ##Regresja
-W tej sekcji sprawdzono, za pomoca regresji liniowej, czy na podstawie wartoÅ“ci innych kolumn moÂ¿na przewidzieÃ¦ liczbÃª elektronÃ³w i atomÃ³w. Dla regresji wybrane zostaÂ³y nastÃªpujÂ¹ce atrybuty: local_volume, local_electrons, local_mean, local_std, local_min, local_max, local_skewness, resolution.
+W tej sekcji sprawdzono, za pomoca regresji liniowej, czy na podstawie wartoœci innych kolumn mo¿na przewidzieæ liczbê elektronów i atomów. Dla regresji wybrane zosta³y nastêpuj¹ce atrybuty: local_volume, local_electrons, local_mean, local_std, local_min, local_max, local_skewness, resolution.
 ```{r Regresja}
 RegDataAtom <- prot_data3 %>% select(local_volume, local_electrons, local_mean, local_std, local_min, local_max, local_skewness, resolution, local_res_atom_non_h_count)
 RegDataAtom <- RegDataAtom[complete.cases(RegDataAtom),]
@@ -173,11 +173,11 @@ RegDataElectron  <- RegDataElectron [complete.cases(RegDataElectron ),]
 RegElectron  <- train(local_res_atom_non_h_electron_sum~., RegDataElectron , method="lm")
 ```
 
-Dla atomÃ³w wartoÅ“Ã¦ miary RMSE wynosÂ³a `r RegAtom$results$RMSE`, a wartoÅ“Ã¦ miary R^2 `r RegAtom$results$Rsquared`.
-Dla elektronÃ³w wartoÅ“Ã¦ miary RMSE wyniosÂ³a `r RegElectron$results$RMSE`, a wartoÅ“Ã¦ miary R^2 `r RegElectron$results$Rsquared`.
+Dla atomów wartoœæ miary RMSE wynos³a `r RegAtom$results$RMSE`, a wartoœæ miary R^2 `r RegAtom$results$Rsquared`.
+Dla elektronów wartoœæ miary RMSE wynios³a `r RegElectron$results$RMSE`, a wartoœæ miary R^2 `r RegElectron$results$Rsquared`.
 
 ##Klasyfikator
-W tej sekcji stworzono klasyfikator, ktÃ³ry przewiduje wartoÅ“Ã¦ res_name na podstawie wartoÅ“ci w innych kolumnach. Jako metodÃª klasyfikacji wybrano Random Forest. Do klasyfikacji wybrano atrybuty: FoFc_mean, FoFc_std, FoFc_square_std, FoFc_min, FoFc_max, resolution.
+W tej sekcji stworzono klasyfikator, który przewiduje wartoœæ res_name na podstawie wartoœci w innych kolumnach. Jako metodê klasyfikacji wybrano Random Forest. Do klasyfikacji wybrano atrybuty: FoFc_mean, FoFc_std, FoFc_square_std, FoFc_min, FoFc_max, resolution.
 ```{r Klasyfikator}
 ClassData <- prot_data3 %>% select(local_volume, local_electrons, local_mean, local_std, local_min, local_max, local_skewness,FoFc_mean, FoFc_std, FoFc_square_std, FoFc_min, FoFc_max, resolution, res_name)
 ClassData <- ClassData[complete.cases(ClassData),]
@@ -196,4 +196,4 @@ overall_table <- matrix$overall
 
 ```
 
-Miary jakoÅ“ci klasyfikatora wyniosÂ³y: Accuracy: `r overall_table[1]`, Kappa: `r overall_table[2]`.
+Miary jakoœci klasyfikatora wynios³y: Accuracy: `r overall_table[1]`, Kappa: `r overall_table[2]`.
